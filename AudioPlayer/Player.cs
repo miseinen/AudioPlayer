@@ -32,28 +32,79 @@ namespace AudioPlayer
                 }
             }
         }
-        public bool isLock;
-        public Song[] Songs;
-
-        public void Play()
+        public bool IsLock;
+        private bool _isPlaying;
+        public bool IsPlaying
         {
-            for (int i = 0; i < Songs.Length; i++)
+            get
             {
-                Console.WriteLine(Songs[i].Title);
-                System.Threading.Thread.Sleep(2000);
+                return _isPlaying;
             }
         }
-
+        public Song[] Songs;
         public void VolumeUp()
         {
-            Volume += 5;
-            Console.WriteLine($"Volume is {Volume}.");
+            Volume += 1;
+            Console.WriteLine($"Звук был увеличен. Уровень громкости: {Volume}.");
         }
 
         public void VolumeDown()
         {
-            Volume -= 5;
-            Console.WriteLine($"Volume is {Volume}.");
+            Volume -= 1;
+            Console.WriteLine($"Звук был уменьшен. Уровень громкости: {Volume}.");
+        }
+        public void VolumeChangeUp(int step)
+        {
+            Console.Write("Введите число, на сколько необходимо увеличить громкость: ");
+            step = Convert.ToInt32(Console.ReadLine());
+            Volume += step;
+            Console.WriteLine($"Звук был увеличен. Уровень громкости: {Volume}.");
+        }
+        public void VolumeChangeDown(int step)
+        {
+            Console.Write("Введите число, на сколько необходимо уменьшить громкость: ");
+            step = Convert.ToInt32(Console.ReadLine());
+            Volume -= step;
+            Console.WriteLine($"Звук был уменьшен. Уровень громкости: {Volume}.");
+        }
+        public void Lock()
+        {
+            IsLock = true;
+            Console.WriteLine("Плеер заблокирован.");
+        }
+        public void UnLock()
+        {
+            IsLock = false;
+            Console.WriteLine("Плеер разблокирован.");
+        }
+        
+        public void Stop()
+        {
+            if (!IsLock)
+            {
+                _isPlaying = false;
+                Console.WriteLine("Плеер остановлен.");
+            }
+        }
+        public void Start()
+        {
+            if (!IsLock)
+            {
+                _isPlaying = true;
+                Console.WriteLine("Плеер запущен.");
+            }
+        }
+        
+        public void Play()
+        {
+            if (_isPlaying)
+            {
+                for (int i = 0; i < Songs.Length; i++)
+                {
+                    Console.WriteLine(Songs[i].Title);
+                    System.Threading.Thread.Sleep(2000);
+                }
+            }
         }
     }
 }

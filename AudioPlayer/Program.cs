@@ -32,21 +32,54 @@ namespace AudioPlayer
             {
                 switch (ReadLine())
                 {
-                    case "u":
+                    case "up":
                         {
                             player.VolumeUp();
+                            break;
                         }
-                        break;
-                    case "d":
+                        
+                    case "down":
                         {
                             player.VolumeDown();
+                            break;
                         }
-                        break;
-                    case "p":
+                        
+                    case "play":
                         {
                             player.Play();
+                            break;
                         }
-                        break;
+                    case "upstep":
+                        {
+                            player.VolumeChangeUp(0);
+                            break;
+                        }
+                    case "downstep":
+                        {
+                            player.VolumeChangeDown(0);
+                            break;
+                        }
+                    case "lock":
+                        {
+                            player.Lock();
+                            break;
+                        }
+                    case "unlock":
+                        {
+                            player.UnLock();
+                            break;
+                        }
+                        
+                    case "stop":
+                        {
+                            player.Stop();
+                            break;
+                        }
+                    case "start":
+                        {
+                            player.Start();
+                            break;
+                        }
                 }
             }
         }

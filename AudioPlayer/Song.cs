@@ -15,5 +15,7 @@ namespace AudioPlayer
         public string Genre;
         public Artist Artist;
         public Album Album;
+        public Band Band;
+        
     }
 }
