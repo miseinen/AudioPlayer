@@ -101,8 +101,8 @@ namespace AudioPlayer
             {
                 for (int i = 0; i < Songs.Length; i++)
                 {
-                    Console.WriteLine(Songs[i].Title);
-                    System.Threading.Thread.Sleep(2000);
+                    Console.WriteLine(Songs[i].Title+" "+Songs[i].Artist.Name+" "+Songs[i].Duration);
+                    System.Threading.Thread.Sleep(Songs[i].Duration);
                 }
             }
         }
