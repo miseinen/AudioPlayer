@@ -8,102 +8,108 @@ namespace AudioPlayer
 {
     class Player
     {
-        private int _volume;
-        private const int _maxVolume=100;
+        private int volume;
+        private const int maxVolume=100;
         public int Volume
         {
             get
             {
-                return _volume;
+                return volume;
             }
             private set
             {
-                if (value > _maxVolume)
+                if (value > maxVolume)
                 {
-                    _volume = _maxVolume;
+                    volume = maxVolume;
                 }
                 else if (value < 0)
                 {
-                    _volume = 0;
+                    volume = 0;
                 }
                 else
                 {
-                    _volume = value;
+                    volume = value;
                 }
             }
         }
         public bool IsLock;
-        private bool _isPlaying;
+        private bool isPlaying;
         public bool IsPlaying
         {
             get
             {
-                return _isPlaying;
+                return isPlaying;
             }
         }
         public Song[] Songs;
         public void VolumeUp()
         {
             Volume += 1;
-            Console.WriteLine($"Звук был увеличен. Уровень громкости: {Volume}.");
+            Console.WriteLine($"Volume was changed. Current Volume: {Volume}.");
         }
 
         public void VolumeDown()
         {
             Volume -= 1;
-            Console.WriteLine($"Звук был уменьшен. Уровень громкости: {Volume}.");
+            Console.WriteLine($"Volume was changed. Current Volume: {Volume}.");
         }
         public void VolumeChangeUp(int step)
         {
-            Console.Write("Введите число, на сколько необходимо увеличить громкость: ");
+            Console.Write("Increase Volume. Input value: ");
             step = Convert.ToInt32(Console.ReadLine());
             Volume += step;
-            Console.WriteLine($"Звук был увеличен. Уровень громкости: {Volume}.");
+            Console.WriteLine($"Volume was changed. Current Volume: {Volume}.");
         }
         public void VolumeChangeDown(int step)
         {
-            Console.Write("Введите число, на сколько необходимо уменьшить громкость: ");
+            Console.Write("Decrease Volume. Input value: ");
             step = Convert.ToInt32(Console.ReadLine());
             Volume -= step;
-            Console.WriteLine($"Звук был уменьшен. Уровень громкости: {Volume}.");
+            Console.WriteLine($"Volume was changed.Current Volume: { Volume}.");
         }
         public void Lock()
         {
             IsLock = true;
-            Console.WriteLine("Плеер заблокирован.");
+            Console.WriteLine("Player is locked.");
         }
         public void UnLock()
         {
             IsLock = false;
-            Console.WriteLine("Плеер разблокирован.");
+            Console.WriteLine("Player is unloked.");
         }
         
         public void Stop()
         {
             if (!IsLock)
             {
-                _isPlaying = false;
-                Console.WriteLine("Плеер остановлен.");
+                isPlaying = false;
+                Console.WriteLine("Player is stopped.");
             }
         }
         public void Start()
         {
             if (!IsLock)
             {
-                _isPlaying = true;
-                Console.WriteLine("Плеер запущен.");
+                isPlaying = true;
+                Console.WriteLine("Player is started.");
             }
         }
         
         public void Play()
         {
-            if (_isPlaying)
+            for (int i = 0; i < Songs.Length; i++)
             {
-                for (int i = 0; i < Songs.Length; i++)
-                {
-                    Console.WriteLine(Songs[i].Title+" "+Songs[i].Artist.Name+" "+Songs[i].Duration);
-                    System.Threading.Thread.Sleep(Songs[i].Duration);
-                }
+                Console.WriteLine(Songs[i].Title + "  " + Songs[i].Artist.Name + "  " + Songs[i].Duration);
+                System.Threading.Thread.Sleep(Songs[i].Duration);
+            }
+        }
+
+        public void Add(params string[] Song)
+        {
+            Random rand = new Random();
+            for (int i = 0; i < Song.Length; i++)
+            {
+                Console.WriteLine(Song[i]);
             }
         }
     }

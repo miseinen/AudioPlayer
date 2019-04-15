@@ -16,6 +16,5 @@ namespace AudioPlayer
         public Artist Artist;
         public Album Album;
         public Band Band;
-        
     }
 }

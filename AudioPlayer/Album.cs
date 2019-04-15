@@ -9,10 +9,10 @@ namespace AudioPlayer
     class Album
     {
         public string Name;
-        public int Year;
-        public string Path;
-        public Artist Artist;
-        public Band Band;
-        public Song[] Songs;
+        public string Year;//тип поля изменен для корректного выведения значения полей на консоль из задания 10 
+        //public string Path;
+        //public Artist Artist;
+        //public Band Band;
+        //public Song[] Songs;
     }
 }

@@ -11,16 +11,16 @@ namespace AudioPlayer
         public string Name;
         public Artist()
         {
-            this.Name = "Unknown_Artist";
+            this.Name = "Unknown Artist";
         }
         public Artist(string name)
         {
             this.Name =name;
         }
-        public string Nickname;
-        public string Country;
-        public Album[] Albums;
-        public Band Band;
-        public Song[] Songs;
+        //public string Nickname;
+        //public string Country;
+        //public Album[] Albums;
+        //public Band Band;
+        //public Song[] Songs;
     }
 }
