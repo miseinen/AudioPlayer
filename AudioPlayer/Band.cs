@@ -12,8 +12,8 @@ namespace AudioPlayer
         public string Genre;
         public int Year;
         public bool isExist;
-        public Song[] Songs;
-        public Artist[] Artists;
-        public Album[] Albums;
+        public Song Song;
+        public Artist Artist;
+        public Album Album;
     }
 }

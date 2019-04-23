@@ -13,6 +13,6 @@ namespace AudioPlayer
         //public string Path;
         //public Artist Artist;
         //public Band Band;
-        //public Song[] Songs;
+        //public Song Song;
     }
 }

@@ -19,8 +19,8 @@ namespace AudioPlayer
         }
         //public string Nickname;
         //public string Country;
-        //public Album[] Albums;
+        //public Album Album;
         //public Band Band;
-        //public Song[] Songs;
+        //public Song Song;
     }
 }

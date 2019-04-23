@@ -10,6 +10,6 @@ namespace AudioPlayer
     {
         public string Path;
         public string Title;
-        public Song[] Songs;
+        public Song Song;
     }
 }
