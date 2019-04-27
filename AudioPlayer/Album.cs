@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AudioPlayer
 {
-    class Album
+    public class Album
     {
         public string Name;
         public string Year;//тип поля изменен для корректного выведения значения полей на консоль из задания 10 

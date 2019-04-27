@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AudioPlayer
 {
-    class Band
+    public class Band
     {
         public string Title;
         public string Genre;

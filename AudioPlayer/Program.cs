@@ -75,12 +75,12 @@ namespace AudioPlayer
                         }
                     case "shuffle"://перемешивание коллекции песен
                         {
-                            player.Shuffle(songList);
+                            ExtensionClass.Shuffle(songList);
                             break;
                         }
                     case "sort"://сортировка коллекции песен
                         {
-                            player.SortByTitle(songList);
+                            ExtensionClass.SortByTitle(songList);
                             break;
                         }
                     case "show"://отображение коллекции песен
@@ -91,6 +91,16 @@ namespace AudioPlayer
                     case "filter"://фильтр коллекции песен
                         {
                             songClass.FilterByGenre(songList);
+                            break;
+                        }
+                    case "cut"://обрезка названия песни
+                        {
+                            ExtensionClass.StringCut(songList);
+                            break;
+                        }
+                    case "deconstruct"://деконструкция песни
+                        { 
+                            player.GetSongData(songList);
                             break;
                         }
                 }

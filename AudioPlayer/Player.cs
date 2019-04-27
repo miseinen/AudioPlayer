@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AudioPlayer
 {
-    class Player
+    public class Player
     {
         private int volume;
         private const int maxVolume=100;
@@ -111,58 +111,13 @@ namespace AudioPlayer
             song.Add(new Song() { Title = "Anaconda", Duration = 900, Like = false, Genre = Song.Genres.Pop });
             Console.WriteLine("Defaul Song List is added.");
         }
-        public void Shuffle(List<Song> song)//B7-Player1/2. SongsListShuffle
+        public void GetSongData(List<Song> song)//L9-HW-Player-3/3.
         {
-            List<Song> shuffleList = new List<Song>(song.Count);
-            //коллекция чисел  от 0 до song.Count для последующей генерации случайного уникального индекса
-            var nums = Enumerable.Range(0, song.Count).ToList();
-            Random rand = new Random();
-            for (int i = 0; i < song.Count; i++)
+            for (int i= 0; i<song.Count; i++)            
             {
-                int j = rand.Next(0, nums.Count);
-                int index = nums[j];//создание уникального индекса
-                //Console.WriteLine(song[index].Title);
-                shuffleList.Add(new Song() { Title = song[index].Title, Duration = song[index].Duration });
-                nums.RemoveAt(j);//удаление уже использованного уникального индекса из списка чисел
-            }
-            Console.WriteLine("New Shuffeling Collection:");
-            for (int i = 0; i < shuffleList.Count; i++)
-            {
-                Console.WriteLine(shuffleList[i].Title);
-                System.Threading.Thread.Sleep(shuffleList[i].Duration);
-            }
-
-        }
-        public void SortByTitle(List<Song> song)//B7-Player2/2.SongsListSort
-        {
-            List<Song> sortList = new List<Song>(song.Count);
-            for (int i = 0; i < song.Count; i++)
-            {
-                sortList.Add(new Song { Title = song[i].Title, Duration = song[i].Duration });
-            }
-            string[] forSort = new string[sortList.Count];//массив для сортировки названий песен
-            for (int i = 0; i < sortList.Count; i++)
-            {
-                forSort[i] = sortList[i].Title;
-            }
-            Array.Sort(forSort);
-            //блок кода для привязки к названию песни соответсвующей длительности
-            for (int i = 0; i < sortList.Count; i++)
-            {
-                sortList[i].Title = forSort[i];
-                for (int j = 0; j < song.Count; j++)
-                {
-                    if (song[j].Title == sortList[i].Title)
-                    {
-                        sortList[j].Duration = song[i].Duration;
-                    }
-                }
-            }
-            Console.WriteLine("New Sorting Collection:");
-            for (int i = 0; i < sortList.Count; i++)
-            {
-                Console.WriteLine(sortList[i].Title);
-                System.Threading.Thread.Sleep(sortList[i].Duration);
+                song[i].Deconstruct(out string title, out int duration,
+            out Artist artist, out bool? like, out object genre, out Album album, out string lyrics);
+                Console.WriteLine($"Title={title}, Duration={duration}, Artist={artist}, Like={like}, Genre={genre}");
             }
         }
     }
