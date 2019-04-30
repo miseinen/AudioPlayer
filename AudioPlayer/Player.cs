@@ -115,9 +115,8 @@ namespace AudioPlayer
         {
             for (int i= 0; i<song.Count; i++)            
             {
-                song[i].Deconstruct(out string title, out int duration,
-            out Artist artist, out bool? like, out object genre, out Album album, out string lyrics);
-                Console.WriteLine($"Title={title}, Duration={duration}, Artist={artist}, Like={like}, Genre={genre}");
+                (string title,  int duration, _,  bool? like,  object genre, _, _) = song[i];
+                Console.WriteLine($"Title={title}, Duration={duration}, Like={like}, Genre={genre}");
             }
         }
     }

@@ -19,7 +19,8 @@ namespace AudioPlayer
                 int j = rand.Next(0, nums.Count);
                 int index = nums[j];//создание уникального индекса
                 //Console.WriteLine(song[index].Title);
-                shuffleList.Add(new Song() { Title = song[index].Title, Duration = song[index].Duration });
+                shuffleList.Add(new Song() { Title = song[index].Title, Duration = song[index].Duration,
+                Like= song[index].Like, Genre = song[index].Genre});
                 nums.RemoveAt(j);//удаление уже использованного уникального индекса из списка чисел
             }
             Console.WriteLine("New Shuffeling Collection:");
@@ -36,7 +37,8 @@ namespace AudioPlayer
             List<Song> sortList = new List<Song>(song.Count);
             for (int i = 0; i < song.Count; i++)
             {
-                sortList.Add(new Song { Title = song[i].Title, Duration = song[i].Duration });
+                sortList.Add(new Song { Title = song[i].Title, Duration = song[i].Duration, Like = song[i].Like,
+                Genre = song[i].Genre});
             }
             string[] forSort = new string[sortList.Count];//массив для сортировки названий песен
             for (int i = 0; i < sortList.Count; i++)
@@ -64,21 +66,17 @@ namespace AudioPlayer
             }
             return sortList;
         }
-        public static string StringCut(this List<Song> song)//L9-HW-Player-2/3.
+        public static string StringCut(this string song)//L9-HW-Player-2/3.
         {
-            string forCut=null;
-            for (int i = 0; i <song.Count; i++)
+            
+            int length = song.Length;
+            if (song.Length > 10)
             {
-                forCut = song[i].Title;
-                int length = forCut.Length;
-                if (length > 10)
-                {
-                    forCut = forCut.Remove(9, length - 9);
-                    Console.WriteLine($"{forCut}...");
-                }
-                else Console.WriteLine(song[i].Title);
+                song = song.Remove(9, length - 9);
+                Console.WriteLine($"{song}...");
             }
-            return forCut;
+            else Console.WriteLine(song);
+            return song;
         }
         public static void Deconstruct(this Song song, out string title, out int duration, 
             out Artist artist, out bool? like, out object genre, out Album album, out string lyrics)//L9-HW-Player-3/3.

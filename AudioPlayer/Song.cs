@@ -56,16 +56,19 @@ namespace AudioPlayer
         }
         public void FilterByGenre(List<Song> song)//BL8-Player4/4.FilterByGenre.
         {
+            List<Song> filtredList = new List<Song>();
             Console.Write("0-Rock,1-Pop,2-Metalcore,3-Rapcore,4-Jazz,5-Synthwave\n" +
                 "Input literal fo select by genre:");
             int selectGenre = Convert.ToInt32(Console.ReadLine());
             var selectedSong = from item in song
                                where (int)item.Genre == selectGenre
-                               select new { title = item.Title };
+                               select new { title = item.Title, duration=item.Duration, like=item.Like, genre=item.Genre};
             foreach(var item in selectedSong)
             {
-                Console.WriteLine(item.title);
+                filtredList.Add(new Song() { Title = item.title, Duration=item.duration, Like=item.like,
+                Genre=item.genre});
             }
+            ShowList(filtredList);
         }
     }
 }
