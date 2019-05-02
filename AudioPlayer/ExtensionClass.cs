@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AudioPlayer
 {
+    
     public static class ExtensionClass
     {
         public static List<Song> Shuffle(this List<Song> song)//L9-HW-Player-1/3,B7-Player1/2. SongsListShuffle
@@ -30,8 +31,8 @@ namespace AudioPlayer
                 System.Threading.Thread.Sleep(shuffleList[i].Duration);
             }
             return shuffleList;
-
         }
+
         public static List<Song> SortByTitle(this List<Song> song)//L9-HW-Player-1/3,B7-Player2/2.SongsListSort
         {
             List<Song> sortList = new List<Song>(song.Count);
@@ -66,6 +67,7 @@ namespace AudioPlayer
             }
             return sortList;
         }
+
         public static string StringCut(this string song)//L9-HW-Player-2/3.
         {
             
@@ -78,6 +80,7 @@ namespace AudioPlayer
             else Console.WriteLine(song);
             return song;
         }
+
         public static void Deconstruct(this Song song, out string title, out int duration, 
             out Artist artist, out bool? like, out object genre, out Album album, out string lyrics)//L9-HW-Player-3/3.
         {

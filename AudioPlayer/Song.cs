@@ -31,10 +31,12 @@ namespace AudioPlayer
         {
             Like = true;
         }
+
         public void DislikeSong()
         {
             Like = false;
         }
+
         public void ShowList(List<Song> song)//BL8-Player2/3.LikeDislike.
         {
             for (int i = 0; i < song.Count; i++)
@@ -54,6 +56,7 @@ namespace AudioPlayer
                 else Console.WriteLine($"{song[i].Title}, {song[i].Genre}");
             }
         }
+
         public void FilterByGenre(List<Song> song)//BL8-Player4/4.FilterByGenre.
         {
             List<Song> filtredList = new List<Song>();
