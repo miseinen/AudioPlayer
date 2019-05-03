@@ -134,13 +134,18 @@ namespace AudioPlayer
                     case "cut"://обрезка названия песни
                         {
                             player.Skin.NewScreen();
+                            for (int i = 0; i < songList.Count; i++)
+                            {
+                                songList[i].Title=songList[i].Title.StringCut();
+                                System.Threading.Thread.Sleep(songList[i].Duration);
+                            }/*
                             var cutTitle=
                             from item in songList
                             select item.Title;
                             foreach (var item in songList)
                             {
                                 item.Title.StringCut();
-                            }
+                            }*/
                             break;
                         }
                     case "deconstruct"://деконструкция песни

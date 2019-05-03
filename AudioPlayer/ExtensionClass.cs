@@ -75,7 +75,8 @@ namespace AudioPlayer
             if (song.Length > 10)
             {
                 song = song.Remove(9, length - 9);
-                Console.WriteLine($"{song}...");
+                song = $"{song}...";
+                Console.WriteLine(song);
             }
             else Console.WriteLine(song);
             return song;

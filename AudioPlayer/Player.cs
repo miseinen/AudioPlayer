@@ -164,7 +164,7 @@ namespace AudioPlayer
         }
         public override void Render(string text)
         {
-            Console.ForegroundColor = (ConsoleColor)rand.Next(16);
+            Console.ForegroundColor = (ConsoleColor)rand.Next(1,16);
             Console.WriteLine(text);
             Console.ResetColor();
         }
