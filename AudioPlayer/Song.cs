@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace AudioPlayer
 {
-    public class Song
-    {
+    [Serializable]
+    public class Song: PlayingItem
+{
         public bool? Like { get; set; }
         public int Duration;
         public string Title;
@@ -26,7 +29,34 @@ namespace AudioPlayer
             Jazz,
             Synthwave
         }
+        GenericPlayer player = new GenericPlayer();
 
+        public void Clear(List<Song>song)//AL6-Player1/2-AudioFiles.
+        {
+            for (int i = song.Count-1; i >= 0; i--)
+            {
+                song.RemoveAt(i);
+            }
+        }
+        public void Load(List<Song> songList)//AL6-Player1/2-AudioFiles.
+        {
+            List<string> path = new List<string>();
+            DirectoryInfo DirInfo = new DirectoryInfo(@"d:\Курсы\Song");
+            var j = DirInfo.EnumerateFiles().Count();
+            var songs = from wav in DirInfo.EnumerateFiles()
+                        select wav;
+            foreach (var wav in songs)
+            {
+                path.Add(wav.FullName);
+            }
+            for (int i = 0; i < path.Count; i++)
+            {
+                FileInfo songInfo = new FileInfo(path[i]);
+                System.Media.SoundPlayer sp = new System.Media.
+                SoundPlayer(path[i]);
+                songList.Add(new Song() { Title = songInfo.Name, Path=songInfo.FullName });
+            }
+        }
         public void LikeSong()
         {
             Like = true;
@@ -72,6 +102,26 @@ namespace AudioPlayer
                 Genre=item.genre});
             }
             ShowList(filtredList);
+        }
+        /*
+        public  void Add(List<Song> song)
+        {
+            song.Add(new Song() { Title = "Toxicity", Duration = 500, Like = null, Genre = Song.Genres.Rock });
+            song.Add(new Song(){Title = "Nightcall",Duration = 300,Like = false, Genre = Song.Genres.Synthwave});
+            song.Add(new Song() { Title = "What I've done", Duration = 900, Like = false, Genre = Song.Genres.Rock });
+            song.Add(new Song() { Title = "Shout", Duration = 500, Like = true, Genre = Song.Genres.Metalcore });
+            song.Add(new Song() { Title = "Aerials", Duration = 700, Like = true, Genre = Song.Genres.Rock });
+            song.Add(new Song() { Title = "Pain", Duration = 900, Like = null, Genre = Song.Genres.Rock });
+            song.Add(new Song() { Title = "Anaconda", Duration = 900, Like = false, Genre = Song.Genres.Pop });
+        }
+        */
+        public void GetSongData(List<Song> song)//L9-HW-Player-3/3.
+        {
+            for (int i = 0; i < song.Count; i++)
+            {
+                (string title, int duration, _, bool? like, object genre, _, _) = song[i];
+                Console.WriteLine($"Title={title}, Duration={duration}, Like={like}, Genre={genre}");
+            }
         }
     }
 }

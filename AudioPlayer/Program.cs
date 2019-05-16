@@ -7,14 +7,17 @@ using System.Reflection;
 using static System.Console;
 
 
+
 namespace AudioPlayer
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
             var totalskin = new TotalColorSkin();
-            var player = new Player();
+            var songplayer = new SongPlayer();
+            var songPlayer = new Song();
+            GenericPlayer player=new GenericPlayer();
             var songClass = new Song();
             List<Song> songList = new List<Song>();
             skinchange:
@@ -67,7 +70,7 @@ namespace AudioPlayer
                     case "play"://воспроизведение
                         {
                             player.Skin.NewScreen();
-                            player.Play(songList);
+                            songplayer.Play(songList);
                             break;
                         }
                     case "upstep"://увеличение громкости на определенное значение
@@ -101,16 +104,19 @@ namespace AudioPlayer
                             player.Start();
                             break;
                         }
+                        /*
                     case "add"://добавление коллекции песен
                         {
                             player.Skin.NewScreen();
-                            player.Add(songList);
+                            songPlayer.Add(songList);
                             break;
                         }
+                        */
                     case "shuffle"://перемешивание коллекции песен
                         {
                             player.Skin.NewScreen();
                             songList=songList.Shuffle();
+                            player.Skin.Render("Playlist was shuffled.");
                             break;
                         }
                     case "sort"://сортировка коллекции песен
@@ -138,24 +144,45 @@ namespace AudioPlayer
                             {
                                 songList[i].Title=songList[i].Title.StringCut();
                                 System.Threading.Thread.Sleep(songList[i].Duration);
-                            }/*
-                            var cutTitle=
-                            from item in songList
-                            select item.Title;
-                            foreach (var item in songList)
-                            {
-                                item.Title.StringCut();
-                            }*/
+                            }
                             break;
                         }
                     case "deconstruct"://деконструкция песни
-                        { 
-                            player.GetSongData(songList);
+                        {
+                            songPlayer.GetSongData(songList);
                             break;
                         }
                     case "skin"://смена скина
                         {
                             goto skinchange;
+                        }
+                    case "clear"://очищение плейлиста
+                        {
+                            player.Skin.NewScreen();
+                            songPlayer.Clear(songList);
+                            player.Skin.Render("Playlist was cleared.");
+                            break;
+                        }
+                    case "load"://загрузка песен из папки
+                        {
+                            player.Skin.NewScreen();
+                            songPlayer.Load(songList);
+                            player.Skin.Render("New playlist was added.");
+                            break;
+                        }
+                    case "save playlist"://сохранение плейлиста
+                        {
+                            player.Skin.NewScreen();
+                            songplayer.SaveAsPlaylist(songList);
+                            player.Skin.Render("New playlist was saved.");
+                            break;
+                        }
+                    case "load playlist"://загрузка плейлиста
+                        {
+                            player.Skin.NewScreen();
+                            songplayer.LoadPlaylist(songList);
+                            player.Skin.Render("New playlist was loaded.");
+                            break;
                         }
                 }
             }

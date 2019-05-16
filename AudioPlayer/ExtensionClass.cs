@@ -9,77 +9,64 @@ namespace AudioPlayer
     
     public static class ExtensionClass
     {
-        public static List<Song> Shuffle(this List<Song> song)//L9-HW-Player-1/3,B7-Player1/2. SongsListShuffle
+        public static List<T> Shuffle<T>(this List<T> playingItem)//L9-HW-Player-1/3,B7-Player1/2. SongsListShuffle
         {
-            List<Song> shuffleList = new List<Song>(song.Count);
+            List<T> shuffleList = new List<T>(playingItem.Count);
             //коллекция чисел  от 0 до song.Count для последующей генерации случайного уникального индекса
-            var nums = Enumerable.Range(0, song.Count).ToList();
+            var nums = Enumerable.Range(0, playingItem.Count).ToList();
             Random rand = new Random();
-            for (int i = 0; i < song.Count; i++)
+            for (int i = 0; i < playingItem.Count; i++)
             {
                 int j = rand.Next(0, nums.Count);
                 int index = nums[j];//создание уникального индекса
                 //Console.WriteLine(song[index].Title);
-                shuffleList.Add(new Song() { Title = song[index].Title, Duration = song[index].Duration,
-                Like= song[index].Like, Genre = song[index].Genre});
+                shuffleList.Add(playingItem[index]);
                 nums.RemoveAt(j);//удаление уже использованного уникального индекса из списка чисел
-            }
-            Console.WriteLine("New Shuffeling Collection:");
-            for (int i = 0; i < shuffleList.Count; i++)
-            {
-                Console.WriteLine(shuffleList[i].Title);
-                System.Threading.Thread.Sleep(shuffleList[i].Duration);
             }
             return shuffleList;
         }
-
+        /* переписать сортировку для обощенного типа имеет сложности:
+         * либо нужен не статический класс ибо общая сортировка требует реализации интерфейса IComparable,
+         * что невозможно для статического класса,
+         * либо нужно переписывать этот, но уже для коллекции видео, которой нет*/
         public static List<Song> SortByTitle(this List<Song> song)//L9-HW-Player-1/3,B7-Player2/2.SongsListSort
         {
             List<Song> sortList = new List<Song>(song.Count);
+            string[] forSort = new string[song.Count];//массив для сортировки названий песен
             for (int i = 0; i < song.Count; i++)
             {
-                sortList.Add(new Song { Title = song[i].Title, Duration = song[i].Duration, Like = song[i].Like,
-                Genre = song[i].Genre});
-            }
-            string[] forSort = new string[sortList.Count];//массив для сортировки названий песен
-            for (int i = 0; i < sortList.Count; i++)
-            {
-                forSort[i] = sortList[i].Title;
+                forSort[i] = song[i].Title;
             }
             Array.Sort(forSort);
-            //блок кода для привязки к названию песни соответсвующей длительности
-            for (int i = 0; i < sortList.Count; i++)
+            foreach (var title in forSort)
             {
-                sortList[i].Title = forSort[i];
+                sortList.Add(new Song() { Title = title });
+            }
+            //блок кода для привязки к названию песни соответсвующего пути
+            for (int i = 0; i < song.Count; i++)
+            {
                 for (int j = 0; j < song.Count; j++)
                 {
-                    if (song[j].Title == sortList[i].Title)
+                    if (sortList[i].Title == song[j].Title)
                     {
-                        sortList[j].Duration = song[i].Duration;
+                        sortList[i].Path = song[j].Path;
                     }
                 }
             }
-            Console.WriteLine("New Sorting Collection:");
-            for (int i = 0; i < sortList.Count; i++)
-            {
-                Console.WriteLine(sortList[i].Title);
-                System.Threading.Thread.Sleep(sortList[i].Duration);
-            }
             return sortList;
         }
-
-        public static string StringCut(this string song)//L9-HW-Player-2/3.
+            public static string StringCut(this string playingItem)//L9-HW-Player-2/3.
         {
             
-            int length = song.Length;
-            if (song.Length > 10)
+            int length = playingItem.Length;
+            if (playingItem.Length > 10)
             {
-                song = song.Remove(9, length - 9);
-                song = $"{song}...";
-                Console.WriteLine(song);
+                playingItem = playingItem.Remove(9, length - 9);
+                playingItem = $"{playingItem}...";
+                Console.WriteLine(playingItem);
             }
-            else Console.WriteLine(song);
-            return song;
+            else Console.WriteLine(playingItem);
+            return playingItem;
         }
 
         public static void Deconstruct(this Song song, out string title, out int duration, 

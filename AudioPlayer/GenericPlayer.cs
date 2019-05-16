@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace AudioPlayer
 {
-    public class Player
+    public class GenericPlayer
     {
         public Skin Skin;
         private int volume;
-        private const int maxVolume=100;
+        private const int maxVolume = 100;
         public int Volume
         {
             get
@@ -82,7 +82,7 @@ namespace AudioPlayer
             IsLock = false;
             Skin.Render("Player is unloked.");
         }
-        
+
         public void Stop()
         {
             if (!IsLock)
@@ -98,38 +98,6 @@ namespace AudioPlayer
             {
                 isPlaying = true;
                 Skin.Render("Player is started.");
-            }
-        }
-
-        List<Song> songList = new List<Song>();
-        public void Play(List<Song> songList)
-        {
-            for (int i = 0; i < songList.Count; i++)
-            {
-                Skin.Render(songList[i].Title);
-                System.Threading.Thread.Sleep(songList[i].Duration);
-            }
-        }
-        
-        public void Add(List<Song> song)
-        {
-            song.Add(new Song() { Title = "Toxicity", Duration = 500, Like=null, Genre=Song.Genres.Rock });
-            song.Add(new Song() { Title = "Nightcall", Duration = 300, Like=false, Genre = Song.Genres.Synthwave
-            });
-            song.Add(new Song() { Title = "What I've done", Duration = 900, Like = false, Genre = Song.Genres.Rock });
-            song.Add(new Song() { Title = "Shout", Duration = 500, Like = true, Genre = Song.Genres.Metalcore });
-            song.Add(new Song() { Title = "Aerials", Duration = 700, Like = true, Genre = Song.Genres.Rock });
-            song.Add(new Song() { Title = "Pain", Duration = 900, Like = null, Genre = Song.Genres.Rock });
-            song.Add(new Song() { Title = "Anaconda", Duration = 900, Like = false, Genre = Song.Genres.Pop });
-            Skin.Render("Defaul Song List is added.");
-        }
-
-        public void GetSongData(List<Song> song)//L9-HW-Player-3/3.
-        {
-            for (int i= 0; i<song.Count; i++)            
-            {
-                (string title,  int duration, _,  bool? like,  object genre, _, _) = song[i];
-                Skin.Render($"Title={title}, Duration={duration}, Like={like}, Genre={genre}");
             }
         }
     }
@@ -152,7 +120,7 @@ namespace AudioPlayer
         }
     }
 
-    public class ColorSkin : Skin//ранддомным цветом каждая строка
+    public class ColorSkin : Skin//рандомным цветом каждая строка
     {
         Random rand = new Random();
         public override void NewScreen()
@@ -164,7 +132,7 @@ namespace AudioPlayer
         }
         public override void Render(string text)
         {
-            Console.ForegroundColor = (ConsoleColor)rand.Next(1,16);
+            Console.ForegroundColor = (ConsoleColor)rand.Next(1, 16);
             Console.WriteLine(text);
             Console.ResetColor();
         }
@@ -185,7 +153,7 @@ namespace AudioPlayer
             Console.CursorVisible = false;
             foreach (char letter in text)
             {
-                Console.ForegroundColor = (ConsoleColor)rand.Next(1,15);
+                Console.ForegroundColor = (ConsoleColor)rand.Next(1, 15);
                 Console.Write(letter);
             }
             Console.WriteLine();
@@ -220,3 +188,4 @@ namespace AudioPlayer
         }
     }
 }
+
