@@ -12,13 +12,18 @@ namespace AudioPlayer
 {
     public class Program
     {
+        public static bool Statusplay;
+        public static Skin SkinForRef;
+        public static int VolumeForRef;
+        public static bool IsLockForRef;
+        public static bool IsPlayingForRef;
+        public bool isLockForRef;
         static void Main(string[] args)
         {
             var totalskin = new TotalColorSkin();
             var songplayer = new SongPlayer();
             var songPlayer = new Song();
             GenericPlayer player=new GenericPlayer();
-            var songClass = new Song();
             List<Song> songList = new List<Song>();
             skinchange:
             WriteLine("Choose Skin\nclassic,color,total, crazy:");
@@ -27,25 +32,29 @@ namespace AudioPlayer
                 case "classic":
                     {
                         player.Skin = new ClassicSkin();
-                        player.Skin.Render("Skin was changed.");
+                        SkinForRef = player.Skin;
+                        player.Skin.NewScreen();
                         break;
                     }
                 case "color":
                     {
                         player.Skin = new ColorSkin();
-                        player.Skin.Render("Skin was changed.");
+                        SkinForRef = player.Skin;
+                        player.Skin.NewScreen();
                         break;
                     }
                 case "total":
                     {
                         player.Skin = new TotalColorSkin();
-                        player.Skin.Render("Skin was changed.");
+                        SkinForRef = player.Skin;
+                        player.Skin.NewScreen();
                         break;
                     }
                 case "crazy":
                     {
                         player.Skin = new CrazyTotalColorSkin();
-                        player.Skin.Render("Skin was changed.");
+                        SkinForRef = player.Skin;
+                        player.Skin.NewScreen();
                         break;
                     }
             }
@@ -53,140 +62,244 @@ namespace AudioPlayer
             while (true)
             {
                 
-                switch (ReadLine())
+                switch (ReadLine())//LA8.Player2/2**. AsyncCommands
                 {
                     case "up"://увеличение громкости на 1
                         {
-                            player.VolumeUp();
+                            if (!IsLockForRef)//запрет команд при заблокированном плеере
+                            {
+                                player.VolumeChangedEvent += (volume) =>
+                                {
+                                    VolumeForRef = volume;
+                                    player.Skin.NewScreen();
+                                };
+                                player.VolumeUp();
+                            }
                             break;
                         }
 
                     case "down"://уменьшение громности на 1
                         {
-                            player.VolumeDown();
+                            if (!IsLockForRef)
+                            {
+                                player.VolumeChangedEvent += (volume) =>
+                                {
+                                    VolumeForRef = volume;
+                                    player.Skin.NewScreen();
+                                };
+                                player.VolumeDown();
+                            }
                             break;
                         }
 
                     case "play"://воспроизведение
                         {
-                            player.Skin.NewScreen();
-                            songplayer.Play(songList);
+                            if (!IsLockForRef)
+                            {
+                                Statusplay = true;
+                                songplayer.SongStartedEvent += (songlist) =>
+                                {
+                                    player.Skin.NewScreen();
+                                };
+                                songplayer.Play(songList);
+                                songplayer.Dispose();
+                            }
                             break;
                         }
-                    case "upstep"://увеличение громкости на определенное значение
-                        {
-                            player.VolumeChangeUp(0);
-                            break;
-                        }
-                    case "downstep"://уменьшение громкости на определенное значение
-                        {
-                            player.VolumeChangeDown(0);
-                            break;
-                        }
+                    
                     case "lock"://блокировка плеера
                         {
-                            player.Lock();
+                            if (!IsLockForRef)
+                            {
+                                player.PlayerLockedEvent += (IsLock) =>
+                                {
+                                    IsLockForRef = IsLock;
+                                    player.Skin.NewScreen();
+                                };
+                                player.Lock();
+                            }
                             break;
                         }
                     case "unlock"://разблокировка плеера
                         {
+                            player.PlayerUnlockedEvent += (IsLock) =>
+                            {
+                                IsLockForRef = IsLock;
+                                player.Skin.NewScreen();
+                            };
                             player.UnLock();
                             break;
                         }
 
                     case "stop"://остановка плеера
                         {
-                            player.Stop();
+                            if (!IsLockForRef)
+                            {
+                                Statusplay = false;
+                                player.PlayerStoppedEvent += (isPlaying) =>
+                                {
+                                    IsPlayingForRef = isPlaying;
+                                    player.Skin.NewScreen();
+                                    player.Skin.Render("Cancelled");
+                                };
+                                player.Stop();
+                            }
                             break;
                         }
                     case "start"://запуск плеера
                         {
-                            player.Start();
+                            if (!IsLockForRef)
+                            {
+                                player.PlayerStartedEvent += (isPlaying) =>
+                                {
+                                    IsPlayingForRef = isPlaying;
+                                    player.Skin.NewScreen();
+                                    player.Skin.Render("Started");
+                                };
+                                player.Start();
+                            }
                             break;
                         }
-                        /*
-                    case "add"://добавление коллекции песен
-                        {
-                            player.Skin.NewScreen();
-                            songPlayer.Add(songList);
-                            break;
-                        }
-                        */
+                        
                     case "shuffle"://перемешивание коллекции песен
                         {
-                            player.Skin.NewScreen();
-                            songList=songList.Shuffle();
-                            player.Skin.Render("Playlist was shuffled.");
+                            if (!IsLockForRef)
+                            {
+                                songPlayer.SongsListChangedEvent += (song) =>
+                                {
+                                    player.Skin.NewScreen();
+                                    player.Skin.Render("Playlist changed");
+                                };
+                                songList = songPlayer.Shuffled(songList);
+                            }
                             break;
                         }
                     case "sort"://сортировка коллекции песен
                         {
-                            player.Skin.NewScreen();
-                            songList =songList.SortByTitle();
+                            if (!IsLockForRef)
+                            {
+                                songPlayer.SongsListChangedEvent += (song) =>
+                                {
+                                    player.Skin.NewScreen();
+                                    player.Skin.Render("Playlist changed");
+                                };
+                                songList = songPlayer.Sort(songList);
+                            }
                             break;
                         }
                     case "show"://отображение коллекции песен
                         {
-                            player.Skin.NewScreen();
-                            songClass.ShowList(songList);
+                            if (!IsLockForRef)
+                            {
+                                player.Skin.NewScreen();
+                                songPlayer.ShowList(songList);
+                            }
                             break;
                         }
                     case "filter"://фильтр коллекции песен
                         {
-                            player.Skin.NewScreen();
-                            songClass.FilterByGenre(songList);
+                            if (!IsLockForRef)
+                            {
+                                songPlayer.SongsListChangedEvent += (song) =>
+                                {
+                                    player.Skin.NewScreen();
+                                    player.Skin.Render("Playlist changed");
+                                };
+                                songPlayer.FilterByGenre(songList);
+                            }
                             break;
                         }
                     case "cut"://обрезка названия песни
                         {
-                            player.Skin.NewScreen();
-                            for (int i = 0; i < songList.Count; i++)
+                            if (!IsLockForRef)
                             {
-                                songList[i].Title=songList[i].Title.StringCut();
-                                System.Threading.Thread.Sleep(songList[i].Duration);
+                                player.Skin.NewScreen();
+                                for (int i = 0; i < songList.Count; i++)
+                                {
+                                    songList[i].Title = songList[i].Title.StringCut();
+                                    System.Threading.Thread.Sleep(songList[i].Duration);
+                                }
                             }
                             break;
                         }
                     case "deconstruct"://деконструкция песни
                         {
-                            songPlayer.GetSongData(songList);
+                            if (!IsLockForRef)
+                            {
+                                songPlayer.GetSongData(songList);
+                            }
                             break;
                         }
                     case "skin"://смена скина
                         {
-                            goto skinchange;
+                            if (!IsLockForRef)
+                            {
+                                goto skinchange;
+                            }
+                            break;
                         }
                     case "clear"://очищение плейлиста
                         {
-                            player.Skin.NewScreen();
-                            songPlayer.Clear(songList);
-                            player.Skin.Render("Playlist was cleared.");
+                            if (!IsLockForRef)
+                            {
+                                songPlayer.SongsListChangedEvent += (song) =>
+                                {
+                                    player.Skin.NewScreen();
+                                    player.Skin.Render("Playlist changed");
+                                };
+                                songPlayer.Clear(songList);
+                            }
                             break;
                         }
                     case "load"://загрузка песен из папки
                         {
-                            player.Skin.NewScreen();
-                            songPlayer.Load(songList);
-                            player.Skin.Render("New playlist was added.");
+                            if (!IsLockForRef)
+                            {
+                                songPlayer.SongsListChangedEvent += (song) =>
+                                {
+                                    player.Skin.NewScreen();
+                                    player.Skin.Render("Playlist changed");
+                                };
+                                player.Skin.NewScreen();
+                                songPlayer.Load(songList);
+                            }
                             break;
                         }
                     case "save playlist"://сохранение плейлиста
                         {
-                            player.Skin.NewScreen();
-                            songplayer.SaveAsPlaylist(songList);
-                            player.Skin.Render("New playlist was saved.");
+                            if (!IsLockForRef)
+                            {
+                                player.Skin.NewScreen();
+                                songplayer.SaveAsPlaylist(songList);
+                                player.Skin.Render("New playlist was saved.");
+                            }
                             break;
                         }
                     case "load playlist"://загрузка плейлиста
                         {
+                            if (!IsLockForRef)
+                            {
+                                player.Skin.NewScreen();
+                                songplayer.LoadPlaylist(songList);
+                                player.Skin.Render("New playlist was loaded.");
+                            }
+                            break;
+                        }
+                    case "test"://сериализация объекта на консоль
+                        {
                             player.Skin.NewScreen();
-                            songplayer.LoadPlaylist(songList);
-                            player.Skin.Render("New playlist was loaded.");
+                            songPlayer.SerializedObject(songPlayer);
+                            break;
+                        }
+                    case "test in file"://сериализация объекта в файл
+                        {
+                            player.Skin.NewScreen();
+                            songPlayer.SerializedObjectInFile(songPlayer);
+                            songPlayer.DeserializedObjectInFile(songPlayer);
                             break;
                         }
                 }
             }
         }
     }
-
 }

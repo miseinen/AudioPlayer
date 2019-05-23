@@ -25,10 +25,7 @@ namespace AudioPlayer
             }
             return shuffleList;
         }
-        /* переписать сортировку для обощенного типа имеет сложности:
-         * либо нужен не статический класс ибо общая сортировка требует реализации интерфейса IComparable,
-         * что невозможно для статического класса,
-         * либо нужно переписывать этот, но уже для коллекции видео, которой нет*/
+        
         public static List<Song> SortByTitle(this List<Song> song)//L9-HW-Player-1/3,B7-Player2/2.SongsListSort
         {
             List<Song> sortList = new List<Song>(song.Count);
@@ -55,7 +52,7 @@ namespace AudioPlayer
             }
             return sortList;
         }
-            public static string StringCut(this string playingItem)//L9-HW-Player-2/3.
+        public static string StringCut(this string playingItem)//L9-HW-Player-2/3.
         {
             
             int length = playingItem.Length;

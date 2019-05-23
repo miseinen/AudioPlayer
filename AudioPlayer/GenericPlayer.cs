@@ -8,6 +8,11 @@ namespace AudioPlayer
 {
     public class GenericPlayer
     {
+        public event Action<bool> PlayerStartedEvent;//A.L7.Player1/2. Events
+        public event Action<bool> PlayerStoppedEvent;
+        public event Action<int> VolumeChangedEvent;
+        public event Action<bool> PlayerLockedEvent;
+        public event Action<bool> PlayerUnlockedEvent;
         public Skin Skin;
         private int volume;
         private const int maxVolume = 100;
@@ -42,53 +47,47 @@ namespace AudioPlayer
                 return isPlaying;
             }
         }
-
-        public void VolumeUp()
+        
+        public int VolumeUp()
         {
-            Volume += 1;
-            Skin.Render($"Volume was changed. Current Volume: {Volume}.");
+            if (!IsLock)
+            {
+                VolumeChangedEvent?.Invoke(++Volume);
+            }
+            return Volume;
         }
 
-        public void VolumeDown()
+        public int VolumeDown()
         {
-            Volume -= 1;
-            Skin.Render($"Volume was changed. Current Volume: {Volume}.");
+            if (!IsLock)
+            {
+                VolumeChangedEvent?.Invoke(--Volume);
+            }
+            return Volume;
         }
 
-        public void VolumeChangeUp(int step)
-        {
-            Skin.Render("Increase Volume. Input value: ");
-            step = Convert.ToInt32(Console.ReadLine());
-            Volume += step;
-            Skin.Render($"Volume was changed. Current Volume: {Volume}.");
-        }
-
-        public void VolumeChangeDown(int step)
-        {
-            Skin.Render("Decrease Volume. Input value: ");
-            step = Convert.ToInt32(Console.ReadLine());
-            Volume -= step;
-            Skin.Render($"Volume was changed.Current Volume: { Volume}.");
-        }
-
-        public void Lock()
+        public bool Lock()
         {
             IsLock = true;
-            Skin.Render("Player is locked.");
+            PlayerLockedEvent?.Invoke(IsLock);
+            return IsLock;
         }
 
-        public void UnLock()
+        public bool UnLock()
         {
             IsLock = false;
-            Skin.Render("Player is unloked.");
+            PlayerUnlockedEvent?.Invoke(IsLock);
+            return IsLock;
         }
 
         public void Stop()
         {
+            PlayerStoppedEvent?.Invoke(isPlaying);
             if (!IsLock)
             {
+                SongPlayer.cancelplay.Cancel();
+                SongPlayer.cancelplay.Dispose();
                 isPlaying = false;
-                Skin.Render("Player is stopped.");
             }
         }
 
@@ -97,7 +96,7 @@ namespace AudioPlayer
             if (!IsLock)
             {
                 isPlaying = true;
-                Skin.Render("Player is started.");
+                PlayerStartedEvent?.Invoke(isPlaying);
             }
         }
     }
@@ -108,11 +107,16 @@ namespace AudioPlayer
         public abstract void Render(string text);
     }
 
-    public class ClassicSkin : Skin
+    public class ClassicSkin : Skin//A.L7.Player2/2. Visualizer
     {
         public override void NewScreen()
         {
             Console.Clear();
+            Program.SkinForRef.Render($"\nStatusBar: " +
+                $"Lock: {Program.IsLockForRef}; Volume: {Program.VolumeForRef}\nPlay:{Program.Statusplay}\n" +
+                $"\nCommandBar:skin,load,play,lock/unlock,\nstart/stop,save playlist, load playlist" +
+                $"\nPlaylist Command:sort,shuffle,show,clear" +
+                $"\nVolume Command: up,down\n");
         }
         public override void Render(string text)
         {
@@ -120,15 +124,19 @@ namespace AudioPlayer
         }
     }
 
-    public class ColorSkin : Skin//рандомным цветом каждая строка
+    public class ColorSkin : Skin//A.L7.Player2/2. Visualizer
     {
         Random rand = new Random();
         public override void NewScreen()
         {
             Console.Clear();
             Console.OutputEncoding = Encoding.UTF8;
-            string c = new string('\u058D', 30);
-            Console.WriteLine(c);
+            string c = new string('\u058D', 40);
+            Program.SkinForRef.Render($"{c}\nStatusBar: " +
+                $"Lock: {Program.IsLockForRef}; Volume: {Program.VolumeForRef};\nPlay:{Program.Statusplay}\n{c}" +
+                $"\nCommandBar:skin,load,play,lock/unlock,\nstart/stop,save playlist, load playlist" +
+                $"\nPlaylist Command:sort,shuffle,show,clear" +
+                $"\nVolume Command: up,down\n{c}");
         }
         public override void Render(string text)
         {
@@ -138,15 +146,19 @@ namespace AudioPlayer
         }
     }
 
-    public class TotalColorSkin : Skin//рандомным цветом каждый символ
+    public class TotalColorSkin : Skin//A.L7.Player2/2. Visualizer
     {
         Random rand = new Random();
         public override void NewScreen()
         {
             Console.Clear();
             Console.OutputEncoding = Encoding.UTF8;
-            string c = new string('\u058D', 30);
-            Console.WriteLine(c);
+            string c = new string('\u058D', 40);
+            Program.SkinForRef.Render($"{c}\nStatusBar: " +
+               $"Lock: {Program.IsLockForRef}; Volume: {Program.VolumeForRef};\nPlay:{Program.Statusplay}\n{c}" +
+               $"\nCommandBar:skin,load,play,lock/unlock,\nstart/stop,save playlist, load playlist" +
+               $"\nPlaylist Command:sort,shuffle,show,clear" +
+               $"\nVolume Command: up,down\n{c}");
         }
         public override void Render(string text)
         {
@@ -160,15 +172,19 @@ namespace AudioPlayer
             Console.ResetColor();
         }
     }
-    public class CrazyTotalColorSkin : Skin//мерцающим рандомным цветом каждый символ
-    {                                      //но не работает со списком песен, показывает только одну строку
+    public class CrazyTotalColorSkin : Skin//A.L7.Player2/2. Visualizer,LA8.Player2/2**. AsyncCommands
+    { 
         Random rand = new Random();
         public override void NewScreen()
         {
             Console.Clear();
             Console.OutputEncoding = Encoding.UTF8;
-            string c = new string('\u058D', 30);
-            Console.WriteLine(c);
+            string c = new string('\u058D', 40);
+            Program.SkinForRef.Render($"{c}\nStatusBar: " +
+               $"Lock: {Program.IsLockForRef}; Volume: {Program.VolumeForRef};\nPlay:{Program.Statusplay}\n{c}" +
+               $"\nCommandBar:skin,load,play,lock/unlock,\nstart/stop,save playlist, load playlist" +
+               $"\nPlaylist Command:sort,shuffle,show,clear" +
+               $"\nVolume Command: up,down\n{c}");
         }
         public override void Render(string text)
         {

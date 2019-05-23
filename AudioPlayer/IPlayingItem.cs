@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace AudioPlayer
 {
-    public class PlayingItem
+    public interface IPlayingItem
     {
+        string Title { get; set; }
+        int Duration { get; set; }
+        string Path { get; set; }
     }  
 }
 
